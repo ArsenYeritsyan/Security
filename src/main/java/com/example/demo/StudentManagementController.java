@@ -1,9 +1,8 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,13 +14,19 @@ public class StudentManagementController {
             new Student(2, "student2"),
             new Student(3, "student3")
     );
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_ADMINTRAINEE')")
     public List<Student> getAllStudents(){
-        return STUDENTS
+        return STUDENTS;
     }
-    public void registerNewStudent(Student student){
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('student:write')")
+    public void registerNewStudent(@RequestBody Student student){
         System.out.println(student);
     }
-    public void deleteStudent(Integer id){
+    @DeleteMapping(path ="{studentId}")
+    @PreAuthorize("hasAnyAuthority('student:write')")
+    public void deleteStudent(@PathVariable Integer id){
         System.out.println(id);
     }
 
