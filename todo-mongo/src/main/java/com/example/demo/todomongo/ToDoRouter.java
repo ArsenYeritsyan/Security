@@ -1,0 +1,24 @@
+package com.example.demo.todomongo;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.ServerResponse;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
+@Configuration
+@EnableWebFlux
+public class ToDoRouter {
+    @Bean
+    public RouterFunction<ServerResponse>
+    monoRouterFunction(ToDoHandler toDoHandler) {
+        return
+                route(GET("/todo/{id}").and(accept(APPLICATION_JSON)),toDoHandler::getToDo)
+                        .andRoute(GET("/todo").and(accept(APPLICATION_JSON)), toDoHandler::getToDos)
+                        .andRoute(POST("/todo").and(accept(APPLICATION_JSON)), toDoHandler::newToDo);
+    }
+}

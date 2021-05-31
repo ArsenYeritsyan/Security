@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,7 +49,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             //Jwts.parser() .setSigningKey(secretKey).parseClaimsJws(token);//signed jwt
             Claims body = claimsJws.getBody();
             String username = body.getSubject();
-            var authorities = (List<Map<String, String>>) body.get("authorities");
+            List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
 
             Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
                     .map(m -> new SimpleGrantedAuthority(m.get("authority")))
